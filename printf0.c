@@ -1,7 +1,7 @@
 #include "main.h"
 #include <stdarg.h>
 #include <stdarg.h>
-#include <string.h >
+#include <string.h>
 #include <unistd.h>
 
 /**
@@ -25,7 +25,7 @@ int _printf(const char *format, ...)
 
 	while (*format)
 	{
-		if (*fomart != '%')
+		if (*format != '%')
 		{
 			write(1, format, 1);
 			char_print++;
@@ -41,7 +41,7 @@ int _printf(const char *format, ...)
 				write(1, format, 1);
 				char_print++;
 			}
-			else if (format == 'c')
+			else if (*format == 'c')
 			{
 				char c = va_arg(arguments, int);
 				write(1, &c, 1);
