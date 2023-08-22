@@ -44,15 +44,16 @@ int _printf(const char *format, ...)
 			else if (*format == 'c')
 			{
 				char c = va_arg(arguments, int);
+
 				write(1, &c, 1);
 				char_print++;
 			}
 			else if (*format == 's')
 			{
 				char *string = va_arg(arguments, char*);
-				int string_len =0;
+				int string_len = 0;
 
-				while(string[string_len] != '\0')
+				while (string[string_len] != '\0')
 				{
 					string_len++;
 				}
@@ -63,5 +64,5 @@ int _printf(const char *format, ...)
 		format++;
 	}
 	va_end(arguments);
-	return char_print;
+	return (char_print);
 }
