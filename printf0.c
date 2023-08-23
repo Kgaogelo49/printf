@@ -79,6 +79,28 @@ int _printf(const char *format, ...)
 				else if (*format == 'b')
 				{	unsigned int num = va_arg(arguments, unsigned int);
 					char_print += print_binary(num); }
+				else if (*format == 'u')
+				{	unsigned int num = va_arg(arguments, unsigned int);
+					char num_string[12];
+					int num_len = sprintf(num_string, "%u", num);
+					write(1, num_string, num_len);
+					char_print += num_len; }
+				else if (*format == 'o')
+				{	unsigned int num = va_arg(arguments, unsigned int);
+					char num_string[12];
+					int num_len = sprintf(num_string, "%o", num);
+					write(1, num_string, num_len);
+					char_print += num_len; }
+				else if (*format == 'x' || *format == 'X')
+				{	unsigned int num = va_arg(arguments, unsigned int);
+					char num_string[12];
+					int num_len;
+					if (*format == 'x')
+						num_len = sprintf(num_string, "%x", num);
+					else
+						num_len = sprintf(num_string, "%X", num);
+					write(1, num_string, num_len);
+					char_print += num_len; }
 			}
 			format++;
 		}
