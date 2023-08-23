@@ -9,5 +9,6 @@
 int _printf(const char *format, ...);
 int binary(int num);
 int octal(int num);
+int print_binary(unsigned int num);
 
 #endif /* MAIN_H */

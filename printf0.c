@@ -1,6 +1,33 @@
 #include "main.h"
 
 /**
+ * print_binary - function to print an integer in binary format
+ * @num: the number to be cnverted
+ * Return: 1
+ */
+int print_binary(unsigned int num)
+{	char binary_string[33];
+	int index = 31;
+	int i = 0;
+
+	while (index >= 0 && ((num >> index) & 1) == 0)
+	{	index--;
+	}
+
+	if (index < 0) 
+	{	binary_string[0] = '0';
+		return (write(1, binary_string, 1));
+	}
+
+	while (index >= 0)
+	{	binary_string[i++] = ((num >> index) & 1) ? '1' : '0';
+		index--;
+	}
+
+	return (write(1, binary_string, i));
+}
+
+/**
  * _printf - function that produces output according to a format
  * @format: the format string
  * Return:  the number of characters printed
@@ -42,6 +69,16 @@ int _printf(const char *format, ...)
 					write(1, string, string_len);
 					char_print += string_len;
 				}
+				else if (*format == 'd' || *format == 'i')
+				{	int num = va_arg(arguments, int);
+					char num_str[12];
+					int num_len = sprintf(num_str, "%d", num);
+
+					write(1, num_str, num_len);
+					char_print += num_len; }
+				else if (*format == 'b')
+				{	unsigned int num = va_arg(arguments, unsigned int);
+					char_print += print_binary(num); }
 			}
 			format++;
 		}
