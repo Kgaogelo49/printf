@@ -36,6 +36,8 @@ int _printf(const char *format, ...)
 {
 	va_list arguments;
 	int char_print = 0;
+	char buffer[1024];
+	int buffer_index = 0;
 
 	if (!format || (format[0] == '%' && format[1] == '\0'))
 	return (-1);
@@ -44,8 +46,14 @@ int _printf(const char *format, ...)
 		while (*format)
 		{
 			if (*format != '%')
-			{	write(1, format, 1);
-				char_print++; }
+			{	buffer[buffer_index++] = *format;
+				char_print++;
+		       
+				if (buffer_index == sizeof(buffer) - 1)
+				{
+					write(1, buffer, buffer_index);
+					buffer_index = 0; }
+			}
 			else
 			{
 				format++;
@@ -53,53 +61,56 @@ int _printf(const char *format, ...)
 					break;
 
 				if (*format == '%')
-				{	write(1, format, 1);
-					char_print++; }
+				{	buffer[buffer_index++] = '%';
+					char_print++;
+
+					if (buffer_index == sizeof(buffer) - 1)
+					{	write(1, buffer, buffer_index);
+						buffer_index = 0; }
+				}
 				else if (*format == 'c')
 				{	char c = va_arg(arguments, int);
-					write(1, &c, 1);
+					buffer[buffer_index++] = c;
 					char_print++; }
 				else if (*format == 's')
 				{	char *string = va_arg(arguments, char*);
-					int string_len = 0;
 
-					while (string[string_len] != '\0')
-					{	string_len++;
-					}
-					write(1, string, string_len);
-					char_print += string_len;
+					while (*string)
+					{	buffer[buffer_index++] = *string;
+						char_print++;
+						if (buffer_index == sizeof(buffer) - 1)
+						{
+							write(1, buffer, buffer_index);
+							buffer_index = 0; }
+					string++; }
 				}
 				else if (*format == 'd' || *format == 'i')
 				{	int num = va_arg(arguments, int);
-					char num_str[12];
-					int num_len = sprintf(num_str, "%d", num);
-
-					write(1, num_str, num_len);
+					int num_len = sprintf(buffer + buffer_index, "%d", num);
+					
+					buffer_index += num_len;
 					char_print += num_len; }
 				else if (*format == 'b')
 				{	unsigned int num = va_arg(arguments, unsigned int);
 					char_print += print_binary(num); }
 				else if (*format == 'u')
 				{	unsigned int num = va_arg(arguments, unsigned int);
-					char num_string[12];
-					int num_len = sprintf(num_string, "%u", num);
-					write(1, num_string, num_len);
+					int num_len = sprintf(buffer + buffer_index, "%u", num);
+					buffer_index += num_len;
 					char_print += num_len; }
 				else if (*format == 'o')
 				{	unsigned int num = va_arg(arguments, unsigned int);
-					char num_string[12];
-					int num_len = sprintf(num_string, "%o", num);
-					write(1, num_string, num_len);
+					int num_len = sprintf(buffer + buffer_index, "%o", num);
+					buffer_index += num_len;
 					char_print += num_len; }
 				else if (*format == 'x' || *format == 'X')
 				{	unsigned int num = va_arg(arguments, unsigned int);
-					char num_string[12];
 					int num_len;
 					if (*format == 'x')
-						num_len = sprintf(num_string, "%x", num);
+						num_len = sprintf(buffer + buffer_index, "%x", num);
 					else
-						num_len = sprintf(num_string, "%X", num);
-					write(1, num_string, num_len);
+						 num_len = sprintf(buffer + buffer_index, "%X", num);
+					buffer_index += num_len;
 					char_print += num_len; }
 			}
 			format++;
