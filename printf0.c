@@ -10,7 +10,7 @@ int _printf(const char *format, ...)
 	va_list arguments;
 	int char_print = 0;
 
-	if (format == NULL)
+	if (!format || (format[0] == '%' && format[1] == '\0'))
 	return (-1);
 
 	va_start(arguments, format);
