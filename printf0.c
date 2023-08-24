@@ -90,9 +90,6 @@ int _printf(const char *format, ...)
 					
 					buffer_index += num_len;
 					char_print += num_len; }
-				else if (*format == 'b')
-				{	unsigned int num = va_arg(arguments, unsigned int);
-					char_print += print_binary(num); }
 				else if (*format == 'u')
 				{	unsigned int num = va_arg(arguments, unsigned int);
 					int num_len = sprintf(buffer + buffer_index, "%u", num);
